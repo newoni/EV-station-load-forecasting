@@ -81,11 +81,11 @@ class Preprocession4TimeSeriesAnalysis:
         self.cutted_data = data[start:end]
         return self.cutted_data
 
-    def getMovingAverage(self,data):
-        self.rolling_data_mean = data.rolling(24).mean()
+    def getMovingAverage(self,data,rolling_number):
+        self.rolling_data_mean = data.rolling(rolling_number).mean()
         # self.rolling_data_mean.dropna(inplace=True)
 
-        self.rolling_data_std = data.rolling(24).std()
+        self.rolling_data_std = data.rolling(rolling_number).std()
         # self.rolling_data_std.dropna(inplace=True)
 
         return self.rolling_data_mean, self.rolling_data_std
