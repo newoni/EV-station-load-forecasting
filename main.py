@@ -24,8 +24,11 @@ if __name__ =="__main__":
     data = preprocessing.resampled_data_1hour
 
     # Select the horizon of data
-    # data = preprocessing.cutDataOnTime(data, '2017-01-01', '2017-01-03')
-
+    data = preprocessing.cutDataOnTime(data, '2017-01-01', '2017-09-30')
+    # plt.figure()
+    # plt.plot(data)
+    # plt.xticks(rotation=30)
+    # plt.show()
     '''
     SVR part
     '''
@@ -36,13 +39,13 @@ if __name__ =="__main__":
     svr.fit_model(x_data, y_data)
     svr.drawGraph()
 
-    svr_result = svr.predict_model(x_data)
+    # svr_result = svr.predict_model(x_data)
 
     '''
     ARIMA model
     '''
     # Sationarity check with moving average
-    rolling_data_mean, rolling_dataa_std = preprocessing.getMovingAverage(data)
+    rolling_data_mean, rolling_dataa_std = preprocessing.getMovingAverage(data,24)
 
     graph = Graphs()
     graph.plotBasicGraph(data, rolling_data_mean, rolling_dataa_std)
@@ -51,37 +54,47 @@ if __name__ =="__main__":
     tsa = TimeSeriesAnalysis()
     tsa.adfFunction(data)
 
-    # Diff for sationarity
+    # Diff for seasonality
     # loged_data = preprocessing.getLogedData(data)
-    # shifted_data = preprocessing.getShiftedData(loged_data,24)
-    # diffed_data = preprocessing.getDiffData(loged_data,shifted_data)
-    # data = diffed_data
+    shifted_data = preprocessing.getShiftedData(data,24)
+    diffed_data = preprocessing.getDiffData(data,shifted_data)
 
     # Sationarity check diffed data with moving average
-    # rolling_data_mean, rolling_dataa_std = preprocessing.getMovingAverage(loged_data)
-    #
-    # data = loged_data - rolling_data_mean
-    # data.dropna(inplace=True)
-    #
-    # rolling_data_mean, rolling_dataa_std = preprocessing.getMovingAverage(data)
-    #
-    # graph = Graphs()
-    # graph.plotBasicGraph(data, rolling_data_mean, rolling_dataa_std)
+    rolling_data_mean, rolling_dataa_std = preprocessing.getMovingAverage(diffed_data,24)
+    # graph.plotBasicGraph(diffed_data, rolling_data_mean, rolling_dataa_std)
 
     # Sationarity check diffed data with adf function
-    # tsa = TimeSeriesAnalysis()
-    # tsa.adfFunction(data)
-    #
+    tsa = TimeSeriesAnalysis()
+    tsa.adfFunction(diffed_data)
+
     # # Draw acf, pacf plot
     tsa.draw_acf(data)
     tsa.draw_pacf(data)
+    # tsa.draw_acf(diffed_data)
+    # tsa.draw_pacf(diffed_data)
 
     # Make ARIMA model
-    tsa.mkARIMA_model(data, 2, 0, 2)
+    tsa.mkARIMA_model(data,2,0,1)
+    # tsa.mkSARIMA_model(data, 2, 0, 1, 2 ,0,1,24)
 
     # Predict with ARIMA
-    tsa.predict_plot(len(preprocessing.resampled_data_1hour)-24*30,len(preprocessing.resampled_data_1hour)+24,alpha=float(0.05))    # 한 달 전 데이터~24 시간 예측 데이터
-    # tsa.predict_plot(1,len(preprocessing.resampled_data_1hour)+24,alpha=float(0.05))
+    # tsa.predict_plot(len(data)-24*30,len(data)+24,alpha=float(0.05))    # 한 달 전 데이터~24 시간 예측 데이터
+
+    # Plot Test Data V.S. Prediction Data
+    Test_data = preprocessing.resampled_data_1hour['2017-09-16':'2017-10-01']
+    # Predict = tsa.model_fit.predict(start= len(data)-24*15, end = len(data)+24) # ARIMA 용
+    Predict = tsa.model_fit.predict(start = len(data)-24*15, end=len(data)+24)
+    plt.figure()
+    plt.plot(Test_data)
+    plt.plot(Predict)
+    plt.xticks(rotation=15)
+    plt.legend(loc='best')
+    plt.show()
+
+    # Make SARIMA model
+    # tsa.mkSARIMA_model(data,2,0,0,1,0,0,24)
+    # result = tsa.model_fit.predict(start=len(data)-24*15,end=len(data)+24,dynamic=True)
+    # plt.plot(result)
 
     '''
     Data detrend (y - SVR result)
