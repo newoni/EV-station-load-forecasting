@@ -3,7 +3,7 @@ import datetime as dt
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
-from lib.preprocessing import Preprocession4TimeSeriesAnalysis
+from lib.preprocessing import Preprocessing4TimeSeriesAnalysis
 from lib.time_series_analysis import TimeSeriesAnalysis
 from lib.graphs import Graphs
 from lib.SVR import SVRmodel
@@ -14,7 +14,7 @@ if __name__ =="__main__":
     '''
 
     # Data load
-    preprocessing = Preprocession4TimeSeriesAnalysis()
+    preprocessing = Preprocessing4TimeSeriesAnalysis()
 
     # Data preprocessing
     #preprocessing.iter_oper()      # preprocess the data
@@ -29,6 +29,7 @@ if __name__ =="__main__":
     # plt.plot(data)
     # plt.xticks(rotation=30)
     # plt.show()
+
     '''
     SVR part
     '''

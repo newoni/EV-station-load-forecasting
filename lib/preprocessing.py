@@ -3,7 +3,7 @@ import datetime as dt
 import pickle
 import numpy as np
 
-class Preprocession4TimeSeriesAnalysis:
+class Preprocessing4TimeSeriesAnalysis:
     def __init__(self):
         pass
 
