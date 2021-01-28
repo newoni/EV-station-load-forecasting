@@ -60,6 +60,7 @@ class Preprocessing4TimeSeriesAnalysis:
             pickle.dump(self.resampled_data_1day, fr)
         print("**** Complete saving preprocessed data ****")
 
+    # Data preprocessing
     def iter_oper(self):
         self.read_data()
         self.drop_unnecessary_column()
@@ -70,6 +71,7 @@ class Preprocessing4TimeSeriesAnalysis:
         self.save_as_pickle()
         return self.resampled_data_1hour
 
+    # after using iter_oper, load_preprocessed_data
     def load_preprocessed_data(self):
         with open("pickle\\resampled_data_1hour.pickle", "rb") as fr:
             self.resampled_data_1hour = pickle.load(fr)

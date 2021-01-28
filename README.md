@@ -1,7 +1,5 @@
 # EV-station-load-forecasting
 
-## main
-
 ## lib\\graphs.py
 #### Plot 3 types of data. Original data, Mean, Standard deviation
 #### Used matplotlib.pyplot
